@@ -1,0 +1,122 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Directions widget and Tracking with ArcGIS API for JavaScript 4.22
+    </title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.22/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.22/"></script>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/widgets/Directions",
+        "esri/config",
+        "esri/layers/FeatureLayer",
+        "esri/widgets/Track",
+      ], function (Map, MapView, Directions, esriConfig, FeatureLayer, Track) {
+        // An authorization string used to access the basemap, geocoding and routing services
+        esriConfig.apiKey =
+          "AAPK5a302445443b4c939bdd3bf43beb4329_mCqAiiYzj_ICRiIPUh-NSvGnKggn8EKE7suD36vO8sGPK7RRZ9VhoVheFrvzmqE";
+
+        const map = new Map({
+          basemap: "arcgis-topographic",
+        });
+
+        const view = new MapView({
+          zoom: 14,
+          center: [-74.2478914, 4.6486259],
+          container: "viewDiv",
+          map: map,
+        });
+
+        let directionsWidget = new Directions({
+          view: view,
+          showClearButton: true,
+        });
+
+        // Add the Directions widget to the top right corner of the view
+        view.ui.add(directionsWidget, {
+          position: "top-right",
+        });
+
+        const trailheadsRenderer = {
+          type: "simple",
+          symbol: {
+            type: "picture-marker",
+            url: "https://cdn-icons-png.flaticon.com/512/17/17212.png",
+            width: "18px",
+            height: "18px",
+          },
+        };
+
+        const cicloParqueaderos = new FeatureLayer({
+          url: "https://services2.arcgis.com/NEwhEo9GGSHXcRXV/arcgis/rest/services/Cicloparqueaderos_Certificados_Bogota_D_C/FeatureServer/0",
+          title: "Ciclo Parqueaderos Bogotá",
+          renderer: trailheadsRenderer,
+        });
+
+        map.add(cicloParqueaderos);
+
+        const trailsRenderer = {
+          type: "simple",
+          symbol: {
+            color: "#E32D06",
+            type: "simple-line",
+            style: "solid",
+          },
+          visualVariables: [
+            {
+              type: "size",
+              field: "ELEV_GAIN",
+              minDataValue: 0,
+              maxDataValue: 2300,
+              minSize: "6px",
+              maxSize: "10px",
+            },
+          ],
+        };
+
+        const cicloRutas = new FeatureLayer({
+          url: "https://sig.simur.gov.co/arcgis/rest/services/MVI_REDBICI/NARedBici/NAServer/",
+          title: "Ciclo Rutas Bogotá",
+          renderer: trailsRenderer,
+          opacity: 0.75,
+        });
+
+        map.add(cicloRutas, 0);
+
+        let trackWidget = new Track({
+          view: view,
+          url: "https://sig.simur.gov.co/arcgis/rest/services/MVI_REDBICI/NARedBici/NAServer/"
+        });
+
+        view.ui.add(trackWidget, "top-left");
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
