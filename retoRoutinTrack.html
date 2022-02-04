@@ -22,9 +22,9 @@
 
     <link
       rel="stylesheet"
-      href="https://js.arcgis.com/4.22/esri/themes/light/main.css"
+      href="https://js.arcgis.com/4.19/esri/themes/light/main.css"
     />
-    <script src="https://js.arcgis.com/4.22/"></script>
+    <script src="https://js.arcgis.com/4.19/"></script>
 
     <script>
       require([
@@ -34,7 +34,16 @@
         "esri/config",
         "esri/layers/FeatureLayer",
         "esri/widgets/Track",
-      ], function (Map, MapView, Directions, esriConfig, FeatureLayer, Track) {
+        "esri/rest/route",
+      ], function (
+        Map,
+        MapView,
+        Directions,
+        esriConfig,
+        FeatureLayer,
+        Track,
+        route
+      ) {
         // An authorization string used to access the basemap, geocoding and routing services
         esriConfig.apiKey =
           "AAPK5a302445443b4c939bdd3bf43beb4329_mCqAiiYzj_ICRiIPUh-NSvGnKggn8EKE7suD36vO8sGPK7RRZ9VhoVheFrvzmqE";
@@ -52,7 +61,8 @@
 
         let directionsWidget = new Directions({
           view: view,
-          showClearButton: true,
+          routeServiceUrl:
+            "https://sig.simur.gov.co/arcgis/rest/services/MVI_REDBICI/NARedBici/NAServer/Principiante",
         });
 
         // Add the Directions widget to the top right corner of the view
@@ -64,9 +74,9 @@
           type: "simple",
           symbol: {
             type: "picture-marker",
-            url: "https://cdn-icons-png.flaticon.com/512/17/17212.png",
-            width: "18px",
-            height: "18px",
+            url: "https://cdn-icons-png.flaticon.com/512/656/656126.png",
+            width: "25px",
+            height: "25px",
           },
         };
 
@@ -78,40 +88,16 @@
 
         map.add(cicloParqueaderos);
 
-        const trailsRenderer = {
-          type: "simple",
-          symbol: {
-            color: "#E32D06",
-            type: "simple-line",
-            style: "solid",
-          },
-          visualVariables: [
-            {
-              type: "size",
-              field: "ELEV_GAIN",
-              minDataValue: 0,
-              maxDataValue: 2300,
-              minSize: "6px",
-              maxSize: "10px",
-            },
-          ],
-        };
-
-        const cicloRutas = new FeatureLayer({
-          url: "https://sig.simur.gov.co/arcgis/rest/services/MVI_REDBICI/NARedBici/NAServer/",
-          title: "Ciclo Rutas Bogotá",
-          renderer: trailsRenderer,
-          opacity: 0.75,
-        });
-
-        map.add(cicloRutas, 0);
-
         let trackWidget = new Track({
           view: view,
-          url: "https://sig.simur.gov.co/arcgis/rest/services/MVI_REDBICI/NARedBici/NAServer/"
+
+          // goToLocationEnabled: true
         });
 
         view.ui.add(trackWidget, "top-left");
+        view.when(function () {
+          trackWidget.start();
+        });
       });
     </script>
   </head>
