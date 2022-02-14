@@ -1,6 +1,6 @@
-.grid-container{
-  background-color: #8BC6EC;
-  background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+.grid-container {
+  background-color: #d9afd9;
+  background-image: linear-gradient(0deg, #d9afd9 0%, #97d9e1 100%);
 }
 .viewDiv-container > * {
   box-shadow: -10px 10px 10px 10px rgba(0, 0, 0, 0.75);
@@ -23,13 +23,13 @@
   right: 0px;
 }
 #awesome {
-  width: 30px;    
+  width: 30px;
   height: 30px;
 }
 #boton:hover {
   background-color: #ec5304;
 }
-#boton{
+#boton {
   background-color: #242424;
   position: absolute;
   top: 105px;
